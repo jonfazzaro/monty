@@ -1,9 +1,8 @@
-import unittest
-
+from unittest import TestCase, mock
 from monty import Monty
 
 
-class TestMonty(unittest.TestCase):
+class TestMonty(TestCase):
 
     def test_zero_items_returns_zero(self):
         self.assertEqual(
@@ -22,17 +21,16 @@ class TestMonty(unittest.TestCase):
 
     def test_three_hundred_items(self):
         self.assertEqual(
-            [(75, 6), (85, 9), (95, 14)],
+            [(75, 7), (85, 9), (95, 31)],
             self.__forecast(300, [0, 23, 56, 34, 54, 56, 76, 1]))
 
-    def setUp(self):
-        self.mockChoiceCalls = 1
-
-    def __mock_choice(self, data):
-        self.mockChoiceCalls += 1
-        seed = self.mockChoiceCalls / max(1, sum(data))
-        index = round(seed * 10) % len(data)
-        return data[index]
-
     def __forecast(self, items, data):
-        return Monty(data, choose=self.__mock_choice).forecast(items)
+        self.call_count = 0
+
+        def mock_choice(samples):
+            self.call_count += 1
+            index = round(self.call_count/10) % len(samples)
+            return samples[index]
+
+        with mock.patch('random.choice', mock_choice):
+            return Monty(data).forecast(items)

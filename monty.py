@@ -1,4 +1,4 @@
-from random import choice
+import random
 from numpy import percentile
 
 
@@ -7,12 +7,10 @@ class Monty:
     def __init__(self,
                  samples,
                  probabilities=None,
-                 passes=None,
-                 choose=None):
+                 passes=None):
         self.samples = samples
         self.probabilities = probabilities or [75, 85, 95]
         self.passes = passes or 10000
-        self.choose = choose or choice
 
     def forecast(self, items):
         return self.__report(
@@ -30,7 +28,7 @@ class Monty:
             if sum(self.samples) > 0:
                 while done < items:
                     count += 1
-                    done += self.choose(self.samples)
+                    done += random.choice(self.samples)
             return count
 
         return list(map(iterations, range(self.passes)))
