@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
 from monty import Monty
+from tests.fakes import FakeRandom
 
 
 class TestMonty(TestCase):
@@ -24,13 +25,7 @@ class TestMonty(TestCase):
             [(75, 7), (85, 9), (95, 31)],
             self.__forecast(300, [0, 23, 56, 34, 54, 56, 76, 1]))
 
-    def __forecast(self, items, data):
-        self.call_count = 0
-
-        def mock_choice(samples):
-            self.call_count += 1
-            index = round(self.call_count/10) % len(samples)
-            return samples[index]
-
-        with mock.patch('random.choice', mock_choice):
+    @staticmethod
+    def __forecast(items, data):
+        with mock.patch('random.choice', FakeRandom().choice):
             return Monty(data).forecast(items)
