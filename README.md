@@ -4,8 +4,10 @@ Simple Monte Carlo forecasting in your terminal.
 
     monty --items 120 --samples "[8, 19, 12, 13, 3, 15, 6, 6, 7]"
     
-    items     The number of work items to be done.
-    samples   An array of the number of items completed per iteration, historically.
+        items     The number of work items to be done.
+        samples   An array of the number of items completed per iteration, historically.
+
+Returns the number of iterations it will likely take to complete the given number of items, at 75%, 85%, and 95% probability.
 
 Written in Python, for reasons.
 
