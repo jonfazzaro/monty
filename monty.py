@@ -1,28 +1,15 @@
-from numpy import percentile
+import numpy
 
 from project import Project
 
 
 class Monty:
 
-    def __init__(self, samples, items=None):
-        self.items = items
-        self.samples = samples
-        self.simulated = self.__simulate()
+    def __init__(self, items, samples, passes=10000):
+        self.runs = []
+        for i in range(passes):
+            self.runs.append(Project(items, samples))
 
     def forecast(self, probability=85):
-        return round(percentile(
-            self.simulated,
-            probability))
-
-    def __simulate(self):
-        if not self.__is_valid():
-            return [0]
-
-        return list(map(self.__run_project, range(10000)))
-
-    def __is_valid(self):
-        return sum(self.samples) != 0 and self.items != 0
-
-    def __run_project(self, _):
-        return len(Project(self.items, self.samples).iterations)
+        results = list(map(lambda r: len(r.iterations), self.runs))
+        return numpy.percentile(results, probability)
